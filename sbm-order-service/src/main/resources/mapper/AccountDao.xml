@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.seata.samples.order.AccountDAO">
+
+	<!--
+	create table account(account_no varchar(256), amount DOUBLE,  freezed_amount DOUBLE, PRIMARY KEY (account_no))
+	-->
+
+    <select id="getAccount" resultType="io.seata.samples.common.Account">
+		select a.account_no accountNo, a.amount amount, a.freezed_amount freezedAmount from account a where a.account_no=#{value}
+	</select>
+
+    <select id="getAccountForUpdate" resultType="io.seata.samples.common.Account">
+		select a.account_no accountNo, a.amount amount, a.freezed_amount freezedAmount from account a where a.account_no=#{value} for update
+	</select>
+
+    <insert id="addAccount" parameterType="io.seata.samples.common.Account">
+		insert into account(account_no,amount,freezed_amount) values(#{accountNo},#{amount},#{freezedAmount})
+	</insert>
+
+    <update id="updateAmount" parameterType="io.seata.samples.common.Account">
+		update account set amount=#{amount}, freezed_amount=#{freezedAmount} where account_no=#{accountNo}
+	</update>
+
+    <update id="updateFreezedAmount" parameterType="io.seata.samples.common.Account">
+		update account set freezed_amount=#{freezedAmount} where account_no=#{accountNo}
+	</update>
+
+    <delete id="deleteAllAccount" >
+		delete from account
+	</delete>
+
+</mapper>
