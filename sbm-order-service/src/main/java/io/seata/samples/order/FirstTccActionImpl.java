@@ -31,6 +31,7 @@ public class FirstTccActionImpl implements FirstTccAction {
     @Autowired
     private TransactionTemplate fromDsTransactionTemplate;
 
+
     /**
      * 一阶段准备，冻结 转账资金
      * @param businessActionContext
@@ -40,6 +41,7 @@ public class FirstTccActionImpl implements FirstTccAction {
      */
     @Override
     public boolean prepareMinus(BusinessActionContext businessActionContext, final String accountNo, final double amount) {
+
         //分布式事务ID
         final String xid = businessActionContext.getXid();
 
@@ -97,7 +99,7 @@ public class FirstTccActionImpl implements FirstTccAction {
                     }
                     account.setAmount(newAmount);
                     //释放账户 冻结金额
-                    account.setFreezedAmount(account.getFreezedAmount()  - amount);
+                    account.setFreezedAmount(account.getFreezedAmount()  - amount); // 为什么会出现负数？
                     fromAccountDAO.updateAmount(account);
                     log.info(String.format("minus account[%s] amount[%f], dtx transaction id: %s.", accountNo, amount, xid));
                     return true;

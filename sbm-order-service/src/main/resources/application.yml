@@ -1,5 +1,6 @@
 server:
-  port: 8082
+#  port: ${random.int[10000,19999]}
+  port: 8088
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -123,3 +124,7 @@ logging:
     root: error
 mybatis:
   type-aliases-package: io.seata.samples.common
+
+dubbo:
+  provider:
+    threads: 10

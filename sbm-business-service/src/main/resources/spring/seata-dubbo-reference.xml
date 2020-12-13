@@ -30,7 +30,7 @@
 
     <dubbo:protocol name="dubbo" port="-1" />
 
-    <dubbo:provider timeout="10000"  threads="100" threadpool="fixed" loadbalance="roundrobin"/>
+    <dubbo:provider timeout="10000"  threads="${dubbo.provider.threads}" threadpool="fixed" loadbalance="roundrobin"/>
 
 
     <!-- 第二个TCC参与者 服务订阅 -->

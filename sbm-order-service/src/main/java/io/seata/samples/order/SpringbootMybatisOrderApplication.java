@@ -2,6 +2,7 @@ package io.seata.samples.order;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,9 +15,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-@SpringBootApplication(scanBasePackages = "io.seata.samples", exclude = DataSourceAutoConfiguration.class)
+@SpringBootApplication// (scanBasePackages = "io.seata.samples", exclude = DataSourceAutoConfiguration.class)
 @ImportResource("classpath:spring/*.xml")
-@MapperScan(basePackages = "io.seata.samples")
+@MapperScan(basePackages = "io.seata.samples.order")
 public class SpringbootMybatisOrderApplication  implements ApplicationRunner {
 
     public static void main(String[] args) {
@@ -24,6 +25,8 @@ public class SpringbootMybatisOrderApplication  implements ApplicationRunner {
     }
 
 
+    @Value("${spring.datasource.url}")
+    private String  datasourceuuu;
 
     /**
      * 扣钱账户 数据源
@@ -59,6 +62,8 @@ public class SpringbootMybatisOrderApplication  implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+
+        System.out.println("datasourceuuu = " + datasourceuuu);
         //初始化表数据
         try {
             double initAmount = 1_000_000_000;

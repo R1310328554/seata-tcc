@@ -1,4 +1,4 @@
-package io.seata.samples.business;
+package io.seata.samples.business.service;
 
 /**
  * 转账服务

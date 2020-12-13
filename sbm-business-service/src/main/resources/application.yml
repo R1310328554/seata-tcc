@@ -1,4 +1,5 @@
 server:
+#  port: ${random.int[8000,8009]}
   port: 8084
 seata:
   enabled: true
@@ -114,3 +115,7 @@ logging:
 spring:
   jpa:
     show-sql: false
+
+dubbo:
+  provider:
+    threads: 10

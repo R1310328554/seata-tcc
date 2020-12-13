@@ -1,5 +1,6 @@
-package io.seata.samples.business;
+package io.seata.samples.business.service;
 
+import io.seata.samples.business.service.TransferService;
 import io.seata.samples.common.FirstTccAction;
 import io.seata.samples.common.SecondTccAction;
 import io.seata.spring.annotation.GlobalTransactional;

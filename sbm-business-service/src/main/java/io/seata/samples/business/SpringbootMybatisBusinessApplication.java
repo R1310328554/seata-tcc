@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.ImportResource;
 
-@SpringBootApplication(scanBasePackages = "io.seata.samples", exclude = DataSourceAutoConfiguration.class)
+@SpringBootApplication//(scanBasePackages = "io.seata.samples", exclude = DataSourceAutoConfiguration.class)
 @ImportResource("classpath:spring/*.xml")
 public class SpringbootMybatisBusinessApplication {
 

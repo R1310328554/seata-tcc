@@ -133,7 +133,7 @@ public class SecondTccActionImpl implements SecondTccAction {
                     log.error(String.format("Undo prepareAdd account[%s] amount[%f], dtx transaction id: %s.", accountNo, amount, xid));
                     return true;
                 }catch (Throwable t){
-                    t.printStackTrace();
+//                    t.printStackTrace();
                     status.setRollbackOnly();
                     return false;
                 }
