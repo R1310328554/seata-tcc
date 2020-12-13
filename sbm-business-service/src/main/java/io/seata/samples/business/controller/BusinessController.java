@@ -27,7 +27,7 @@ public class BusinessController {
      *
      * @return
      */
-    @RequestMapping("/purchase/commit2")
+    @RequestMapping("/purchase/commit")
     public Boolean purchaseCommit(HttpServletRequest request) {
         doTransferSuccess(1_000_000_000, 10);
         return true;
@@ -69,7 +69,7 @@ public class BusinessController {
      *
      * @return
      */
-    @RequestMapping("/purchase/rollback2")
+    @RequestMapping("/purchase/rollback")
     public Boolean purchaseRollback() {
         try {
             doTransferFailed(100, 10);

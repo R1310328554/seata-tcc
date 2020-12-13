@@ -254,7 +254,7 @@ public class MapperRefresh implements ApplicationContextAware,InitializingBean {
         }
         return false;
     }
-  
+
     /** 
      * 获取整数属性 
      * @param key
