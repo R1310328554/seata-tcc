@@ -27,9 +27,6 @@ public class SpringbootMybatisAccountApplication implements ApplicationRunner {
     }
 
 
-    @Value("${spring.datasource.url}")
-    private String  datasourceuuu;
-
     /**
      * 扣钱账户 数据源
      */
@@ -64,7 +61,6 @@ public class SpringbootMybatisAccountApplication implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        System.out.println("datasourceuuu = " + datasourceuuu);
         //初始化表数据
         double initAmount = 1_000_000_000;
         try {

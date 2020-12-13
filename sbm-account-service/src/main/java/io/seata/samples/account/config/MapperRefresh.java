@@ -1,41 +1,30 @@
 package io.seata.samples.account.config;
 
-import java.io.*;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
+import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-
+import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.log4j.Logger;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.NestedIOException;
 import org.springframework.core.io.Resource;
-  
-import com.google.common.collect.Sets;
 import org.springframework.stereotype.Component;
+
+import java.io.*;
+import java.lang.reflect.Field;
+import java.util.*;
 
 /** 
  * 刷新MyBatis Mapper XML 线程 
- * @author ThinkGem 
- * @version 2016-5-29 
+ * @author LuoKai 
+ * @version 2020-10-2
  */
 @Slf4j
 @Component
@@ -61,12 +50,6 @@ public class MapperRefresh implements ApplicationContextAware,InitializingBean {
     private final static String OPEN = "1";
     private volatile SqlSessionFactoryBean sqlSessionFactoryBean;
 
-    @Value("${ibatis.mapper.hot.deploy:true}")
-    private boolean enable = true;
-
-    @Value("${spring.datasource.url}")
-    private String  datasourceuuu;
-
     static {
         try {  
             prop.load(MapperRefresh.class.getResourceAsStream(filename));
@@ -77,9 +60,14 @@ public class MapperRefresh implements ApplicationContextAware,InitializingBean {
         delaySeconds = getPropInt("delaySeconds");
         sleepSeconds = getPropInt("sleepSeconds");
         mappingPath = getPropString("mappingPath");
-  
-        delaySeconds = delaySeconds == 0 ? 5 : delaySeconds;
-        sleepSeconds = sleepSeconds == 0 ? 3 : sleepSeconds;
+        if (getPropString("enabled") == null) {
+            enabled = true;
+        } else {
+            enabled = getPropBoolean("enabled");
+        }
+
+        delaySeconds = delaySeconds == 0 ? 10 : delaySeconds;
+        sleepSeconds = sleepSeconds == 0 ? 5 : sleepSeconds;
         mappingPath = StringUtils.isBlank(mappingPath) ? "mappings" : mappingPath;
   
         log.debug("[enabled] " + enabled);
@@ -102,10 +90,17 @@ public class MapperRefresh implements ApplicationContextAware,InitializingBean {
             e.printStackTrace();
         }
         configuration = sqlSessionFactory.getConfiguration();
+
+        MapperRegistry mapperRegistry = configuration.getMapperRegistry();
+        Collection<Class<?>> mappers = mapperRegistry.getMappers();
+        for (Iterator<Class<?>> iterator = mappers.iterator(); iterator.hasNext(); ) {
+            Class<?> next =  iterator.next();
+            System.out.println("next = " + next);
+        }
+
         System.out.println("sqlSessionFactory = " + sqlSessionFactory);
         System.out.println("configuration = " + configuration);
         this.mapperLocations = getResource();
-        System.out.println("datasourceuuu = " + datasourceuuu);
     }
 
     /** 
@@ -114,7 +109,7 @@ public class MapperRefresh implements ApplicationContextAware,InitializingBean {
      * @param beforeTime 上次刷新时间 
      * @throws NestedIOException 解析异常 
      * @throws FileNotFoundException 文件未找到 
-     * @author ThinkGem 
+     * @author LuoKai 
      */  
     @SuppressWarnings({ "rawtypes", "unchecked" })  
     private void refresh(File xmlFile, Long beforeTime) throws Exception {
@@ -262,14 +257,27 @@ public class MapperRefresh implements ApplicationContextAware,InitializingBean {
   
     /** 
      * 获取整数属性 
-     * @param key 
-     * @return 
+     * @param key
+     * @return
      */  
-    private static int getPropInt(String key) {  
-        int i = 0;
+    private static boolean getPropBoolean(String key) {
+        boolean i = false;
         try {  
-            i = Integer.parseInt(getPropString(key));
+            i = Boolean.parseBoolean(getPropString(key));
         } catch (Exception e) {  
+        }
+        return i;
+    }
+    /**
+     * 获取整数属性
+     * @param key
+     * @return
+     */
+    private static int getPropInt(String key) {
+        int i = 0;
+        try {
+            i = Integer.parseInt(getPropString(key));
+        } catch (Exception e) {
         }
         return i;
     }
@@ -286,7 +294,7 @@ public class MapperRefresh implements ApplicationContextAware,InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        if(enable){
+        if(enabled){
             beforeTime = System.currentTimeMillis();
             log.debug("[location] " + location);
             log.debug("[configuration] " + configuration);
@@ -374,12 +382,12 @@ public class MapperRefresh implements ApplicationContextAware,InitializingBean {
   
         @SuppressWarnings("unchecked")  
         public V put(String key, V value) {  
-            // ThinkGem 如果现在状态为刷新，则刷新(先删除后添加)  
+            // LuoKai 如果现在状态为刷新，则刷新(先删除后添加)  
             if (MapperRefresh.isRefresh()) {  
                 remove(key);
                 MapperRefresh.log.debug("refresh key:" + key.substring(key.lastIndexOf(".") + 1));
             }
-            // ThinkGem end  
+            // LuoKai end  
             if (containsKey(key)) {  
                 throw new IllegalArgumentException(name + " already contains value for " + key);
             }
