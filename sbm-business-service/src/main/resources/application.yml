@@ -118,4 +118,4 @@ spring:
 
 dubbo:
   provider:
-    threads: 10
+    threads: 100

@@ -4,13 +4,14 @@ import io.seata.samples.business.service.TransferService;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 
-@RequestMapping("/")
+@RequestMapping("/tcc/")
 @RestController
 @Slf4j
 public class BusinessController {
@@ -27,9 +28,9 @@ public class BusinessController {
      *
      * @return
      */
-    @RequestMapping("/purchase/commit")
-    public Boolean purchaseCommit(HttpServletRequest request) {
-        doTransferSuccess(1_000_000_000, 10);
+    @RequestMapping("/commit/{transferAmount}")
+    public Boolean purchaseCommit(@PathVariable Integer transferAmount) {
+        doTransferSuccess(1_000_000_000, transferAmount);
         return true;
     }
     /**
@@ -69,10 +70,10 @@ public class BusinessController {
      *
      * @return
      */
-    @RequestMapping("/purchase/rollback")
-    public Boolean purchaseRollback() {
+    @RequestMapping("/rollback/{transferAmount}")
+    public Boolean purchaseRollback(@PathVariable Integer transferAmount) {
         try {
-            doTransferFailed(100, 10);
+            doTransferFailed(100, transferAmount);
         } catch (Exception e) {
             e.printStackTrace();
             return false;

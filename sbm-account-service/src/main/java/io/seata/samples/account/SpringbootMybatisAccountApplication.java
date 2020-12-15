@@ -64,7 +64,7 @@ public class SpringbootMybatisAccountApplication implements ApplicationRunner {
         //初始化表数据
         double initAmount = 1_000_000_000;
         try {
-            prepareData(toAccountDataSource, "C", initAmount);
+//            prepareData(toAccountDataSource, "C", initAmount);
         } catch (Exception e) {
 //            e.printStackTrace();
         }

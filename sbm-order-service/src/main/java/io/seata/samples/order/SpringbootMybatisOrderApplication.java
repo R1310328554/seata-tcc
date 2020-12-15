@@ -62,8 +62,8 @@ public class SpringbootMybatisOrderApplication  implements ApplicationRunner {
         //初始化表数据
         try {
             double initAmount = 1_000_000_000;
-            prepareData(fromAccountDataSource, "A", initAmount);
-            prepareData(fromAccountDataSource, "B", initAmount);
+//            prepareData(fromAccountDataSource, "A", initAmount);
+//            prepareData(fromAccountDataSource, "B", initAmount);
         } catch (Exception e) {
 //            e.printStackTrace();
         }
