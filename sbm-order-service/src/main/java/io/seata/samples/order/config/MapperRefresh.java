@@ -61,7 +61,10 @@ public class MapperRefresh implements ApplicationContextAware,InitializingBean {
         sleepSeconds = getPropInt("sleepSeconds");
         mappingPath = getPropString("mappingPath");
         if (getPropString("enabled") == null) {
-            enabled = true;
+            String property = System.getProperty("MapperRefresh.enabled");
+            if (property != null) {
+                enabled = Boolean.parseBoolean(getPropString(property));
+            }
         } else {
             enabled = getPropBoolean("enabled");
         }
