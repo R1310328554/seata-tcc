@@ -14,6 +14,12 @@
     <name>sbm-common-service</name>
     <description>Demo project for Spring Boot</description>
 
+    <properties>
+        <docker.image.prefix>bjc-</docker.image.prefix>
+        <!-- docker harbor地址 -->
+        <docker.repostory>10.100.254.144:8081</docker.repostory>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -39,26 +45,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot</artifactId>
@@ -103,6 +90,26 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
+            <!-- 使用Maven插件直接将应用打包为一个Docker镜像 -->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <!-- 这里使用新版dockerfile-maven-plugin插件 -->
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>1.4.10</version>
+                <configuration>
+                    <!-- Dockerfile目录指定 -->
+                    <dockerfile>src/main/docker/Dockerfile</dockerfile>
+                    <repository>${docker.repostory}/${docker.image.prefix}/${project.artifactId}</repository>
+                    <!-- 生成镜像标签 如不指定 默认为latest -->
+                    <tag>${project.version}</tag>
+                    <buildArgs>
+                        <!-- 理论上这里定义的参数可以传递到Dockerfile文件中，目前未实现 -->
+                        <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+                    </buildArgs>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 </project>

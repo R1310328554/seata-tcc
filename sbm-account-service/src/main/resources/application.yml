@@ -1,6 +1,6 @@
 server:
-  #  port: ${random.int[10000,19999]}
-  port: 8082
+  port: ${random.int[8020,8029]}
+#  port: 8082
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource

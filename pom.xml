@@ -18,6 +18,10 @@
     </modules>
 
     <properties>
+        <docker.image.prefix>bjc-</docker.image.prefix>
+        <!-- docker harbor地址 -->
+        <docker.repostory>10.100.254.144:80</docker.repostory>
+
         <springboot.version>2.1.1.RELEASE</springboot.version>
         <java.version>1.8</java.version>
         <druid-spring-boot-starter.version>1.1.10</druid-spring-boot-starter.version>
@@ -341,6 +345,25 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <!-- 使用Maven插件直接将应用打包为一个Docker镜像 -->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <!-- 这里使用新版dockerfile-maven-plugin插件 -->
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>1.4.10</version>
+                <configuration>
+                    <!-- Dockerfile目录指定 -->
+                    <dockerfile>Dockerfile</dockerfile>
+                    <repository>${docker.repostory}/${docker.image.prefix}/${project.artifactId}</repository>
+                    <!-- 生成镜像标签 如不指定 默认为latest -->
+                    <tag>${project.version}</tag>
+                    <buildArgs>
+                        <!-- 理论上这里定义的参数可以传递到Dockerfile文件中，目前未实现 -->
+                        <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+                    </buildArgs>
+                </configuration>
             </plugin>
         </plugins>
     </build>

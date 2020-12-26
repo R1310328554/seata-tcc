@@ -13,6 +13,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.NestedIOException;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -28,7 +29,7 @@ import java.util.*;
  */
 @Slf4j
 @Component
-//@Profile("dev")
+@Profile("dev")
 public class MapperRefresh implements ApplicationContextAware,InitializingBean {
   
     private static String filename = "/mybatis-refresh.properties";
