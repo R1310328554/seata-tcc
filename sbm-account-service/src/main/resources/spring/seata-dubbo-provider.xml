@@ -28,7 +28,7 @@
 
     <dubbo:protocol name="dubbo" port="-1" />
 
-    <dubbo:provider timeout="10000"  threads="${dubbo.provider.threads}" connections="" threadpool="fixed" loadbalance="roundrobin"/>
+    <dubbo:provider timeout="${dubbo.provider.timeout}"  threads="${dubbo.provider.threads}" connections="" threadpool="fixed" loadbalance="roundrobin"/>
 
 <!--    <bean id="secondTccActionImpl" class="io.seata.samples.account.SecondTccActionImpl"/>-->
 

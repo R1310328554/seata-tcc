@@ -128,3 +128,4 @@ mybatis:
 dubbo:
   provider:
     threads: 100
+    timeout: 1000000

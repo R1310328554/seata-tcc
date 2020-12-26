@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 
 @RequestMapping("/tcc/")
@@ -25,14 +24,60 @@ public class BusinessController {
 
     /**
      //执行 A->C 转账成功 demo, 分布式事务提交
-     *
-     * @return
+
+     http://127.0.0.1:8084/tcc/commit/1
+
+     等同于
+     http://127.0.0.1:8084/tcc/transfer/A/C/1
+
      */
     @RequestMapping("/commit/{transferAmount}")
     public Boolean purchaseCommit(@PathVariable Integer transferAmount) {
-        doTransferSuccess(1_000_000_000, transferAmount);
+//        doTransferSuccess(1_000_000_000, transferAmount);
+        doTransfer("A", "C", transferAmount);
+
+        //校验A账户余额：initAmount - transferAmount
+//        checkAmount(fromAccountDAO, "A", initAmount - transferAmount);
+        //校验C账户余额：initAmount + transferAmount
+//        checkAmount(toAccountDAO, "C", initAmount + transferAmount);
         return true;
     }
+
+    /**
+     //执行 B->XXX 转账失败 demo， 分布式事务回滚
+
+     http://127.0.0.1:8084/tcc/rollback/1
+
+     等同于
+     http://127.0.0.1:8084/tcc/transfer/B/XXX/1
+
+     */
+    @RequestMapping("/rollback/{transferAmount}")
+    public Boolean purchaseRollback(@PathVariable Integer transferAmount) {
+        try {
+            doTransfer("B", "XXX", transferAmount);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     *
+     */
+    @RequestMapping("/transfer/{from}/{to}/{transferAmount}")
+    public boolean transfer(@PathVariable String from, @PathVariable String to, @PathVariable Integer transferAmount) {
+        //执行转账操作
+        try {
+            doTransfer(from, to, transferAmount);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     /**
      * 执行转账成功 demo
      *
@@ -41,14 +86,8 @@ public class BusinessController {
      */
     private void doTransferSuccess(double initAmount, double transferAmount)  {
         //执行转账操作
-        doTransfer("A", "C", transferAmount);
-
-        //校验A账户余额：initAmount - transferAmount
-//        checkAmount(fromAccountDAO, "A", initAmount - transferAmount);
-
-        //校验C账户余额：initAmount + transferAmount
-//        checkAmount(toAccountDAO, "C", initAmount + transferAmount);
     }
+
 
     /**
      * 执行转账 操作
@@ -65,41 +104,24 @@ public class BusinessController {
         return ret;
     }
 
-    /**
-     //执行 B->XXX 转账失败 demo， 分布式事务回滚
-     *
-     * @return
-     */
-    @RequestMapping("/rollback/{transferAmount}")
-    public Boolean purchaseRollback(@PathVariable Integer transferAmount) {
-        try {
-            doTransferFailed(100, transferAmount);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * 执行转账 失败 demo， 'B' 向未知用户 'XXX' 转账，转账失败分布式事务回滚
-     * @param initAmount 初始化余额
-     * @param transferAmount  转账余额
-     */
-    private void doTransferFailed(int initAmount, int transferAmount) throws SQLException {
-        // 'B' 向未知用户 'XXX' 转账，转账失败分布式事务回滚
-        try{
-            doTransfer("B", "XXX", transferAmount);
-        }catch (Throwable t){
-            log.info("从账户B向未知账号XXX转账失败.");
-        }
-
-        //校验A2账户余额：initAmount
-//        checkAmount(fromAccountDAO, "B", initAmount);
-
-        //账户XXX 不存在，无需校验
-    }
+    //    /**
+//     * 执行转账 失败 demo， 'B' 向未知用户 'XXX' 转账，转账失败分布式事务回滚
+//     * @param initAmount 初始化余额
+//     * @param transferAmount  转账余额
+//     */
+//    private void doTransferFailed(String from, String to, int initAmount, int transferAmount) throws SQLException {
+//        // 'B' 向未知用户 'XXX' 转账，转账失败分布式事务回滚
+//        try{
+//            doTransfer(from, to, transferAmount);
+//        }catch (Throwable t){
+//            log.info("从账户B向未知账号XXX转账失败.");
+//        }
+//
+//        //校验A2账户余额：initAmount
+////        checkAmount(fromAccountDAO, "B", initAmount);
+//
+//        //账户XXX 不存在，无需校验
+//    }
 
     /**
      * 校验账户余额

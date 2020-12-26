@@ -28,7 +28,7 @@
 
     <dubbo:protocol name="dubbo" port="-1" />
 
-    <dubbo:provider timeout="10000"  threads="${dubbo.provider.threads}" threadpool="fixed" loadbalance="roundrobin"/>
+    <dubbo:provider timeout="${dubbo.provider.timeout}"  threads="${dubbo.provider.threads}" threadpool="fixed" loadbalance="roundrobin"/>
 
     <!-- 第一个TCC 参与者服务发布 -->
     <dubbo:service interface="io.seata.samples.common.FirstTccAction" ref="firstTccActionImpl"/>

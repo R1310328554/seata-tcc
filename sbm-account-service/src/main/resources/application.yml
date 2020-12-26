@@ -123,9 +123,10 @@ logging:
   level:
     root: error
 
-
 dubbo:
   provider:
     threads: 100
+    timeout: 1000000
+
 mybatis:
   type-aliases-package: io.seata.samples.common

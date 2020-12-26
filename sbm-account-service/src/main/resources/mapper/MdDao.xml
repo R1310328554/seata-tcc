@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.seata.samples.account.MdDAO">
+
+	<select id="selectMd"  parameterType="java.util.Map" resultType="java.util.Map">
+		select *  from md a  where a.xid = #{xid} and branch_id = #{branch_id}
+	</select>
+
+	<insert id="insertMd"  parameterType="java.util.Map">
+		insert into md(xid,branch_id,log_status) values(#{xid},#{branch_id},#{log_status})
+	</insert>
+
+	<update id="updateMd"  parameterType="java.util.Map">
+		update md set log_status = #{log_status} where  xid = #{xid} and branch_id = #{branch_id}
+	</update>
+</mapper>

@@ -54,14 +54,6 @@ public class TransferServiceImpl implements TransferService, BeanNameAware {
         return true;
     }
 
-    public void setFirstTccAction(FirstTccAction firstTccAction) {
-        this.firstTccAction = firstTccAction;
-    }
-
-    public void setSecondTccAction(SecondTccAction secondTccAction) {
-        this.secondTccAction = secondTccAction;
-    }
-
     @Override
     public void setBeanName(String s) {
         log.info("TransferServiceImpl.setBeanName     " + s);
