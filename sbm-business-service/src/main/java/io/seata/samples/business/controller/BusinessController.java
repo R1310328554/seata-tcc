@@ -102,7 +102,7 @@ public class BusinessController {
         }else {
             log.info("从账户"+from+"向"+to+"转账 "+transferAmount+"元 失败.");
         }
-        log.error("耗时： " + (System.currentTimeMillis() - start));
+        System.out.println("耗时： " + (System.currentTimeMillis() - start));
         return ret;
     }
 
