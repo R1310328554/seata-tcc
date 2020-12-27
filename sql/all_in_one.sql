@@ -21,6 +21,21 @@ UNIQUE KEY `ux_undo_log` (`xid`,`branch_id`)
 create table account(account_no varchar(256), amount DOUBLE,  freezed_amount DOUBLE, PRIMARY KEY (account_no));
 insert into account(account_no, amount, freezed_amount) values('C', 100000000, 0); -- 初始化金额 一个亿！
 
+CREATE TABLE `md` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `branch_id` bigint(20) NOT NULL,
+  `xid` varchar(100) NOT NULL,
+  `context` varchar(128) DEFAULT NULL,
+  `rollback_info` longblob,
+  `log_status` int(11) NOT NULL,
+  `log_created` datetime DEFAULT NULL,
+  `log_modified` datetime DEFAULT NULL,
+  `ext` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ux_undo_log` (`xid`,`branch_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1002 DEFAULT CHARSET=utf8;
+
+
 # Order
 DROP SCHEMA IF EXISTS db_order;
 CREATE SCHEMA db_order;

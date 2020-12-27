@@ -40,7 +40,7 @@ seata:
     vgroup-mapping:
       my_test_tx_group: default
     grouplist:
-      default: 127.0.0.1:8091
+      default: ${SEATA_IP:10.100.254.144}:${SEATA_PORT:30091}
     #enable-degrade: false
     #disable-global-transaction: false
   transport:
@@ -130,3 +130,5 @@ dubbo:
 
 mybatis:
   type-aliases-package: io.seata.samples.common
+
+ZK_IP: 10.100.254.144

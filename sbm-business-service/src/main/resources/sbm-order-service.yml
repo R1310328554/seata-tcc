@@ -19,15 +19,30 @@ spec:
         - name: sbm-order-service
           image: 10.100.254.144/bjc/sbm-order-service:latest
           ports:
-            - containerPort: 8084
+            - containerPort: 8010
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
-              port: 8084
-            initialDelaySeconds: 30
-            timeoutSeconds: 30
+              path: /hi
+              port: 8010
+            initialDelaySeconds: 5
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
           imagePullPolicy: IfNotPresent
+          env:
+              - name: ZK_IP
+                value: "zk-cs"
+              - name: MYSQL_IP
+                value: "mysql-svc"
+              - name: MYSQL_PORT
+                value: "30306"
+              - name: SEATA_IP
+                value: "seata-server"
+              - name: HONORIFIC
+                value: "The Most Honorable"
+              - name: NAME
+                value: "Kubernetes"
       tolerations:
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
@@ -42,8 +57,8 @@ metadata:
     app: sbm-order-service
 spec:
   ports:
-    - port: 8084
-      targetPort: 8084
+    - port: 8010
+      targetPort: 8010
   selector:
     app: sbm-order-service
-  type: NodePort  
+  type: ClusterIP

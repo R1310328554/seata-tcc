@@ -23,11 +23,29 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /hi
               port: 8084
-            initialDelaySeconds: 30
-            timeoutSeconds: 30
+            initialDelaySeconds: 5
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
           imagePullPolicy: IfNotPresent
+          env:
+            - name: ZK_IP
+              value: "zk-cs"
+            - name: MYSQL_IP
+              value: "mysql-svc"
+            - name: MYSQL_PORT
+              value: "30306"
+            - name: SEATA_IP
+              value: "seata-server"
+            - name: SEATA_PORT
+              value: "30091"
+            - name: HONORIFIC
+              value: "The Most Honorable"
+            - name: NAME
+              value: "Kubernetes"
+
       tolerations:
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
