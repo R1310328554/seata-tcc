@@ -1,0 +1,3 @@
+MYSQL_IP: mysql_svc
+SEATA_IP: seata-server
+ZK_IP: zk_svc

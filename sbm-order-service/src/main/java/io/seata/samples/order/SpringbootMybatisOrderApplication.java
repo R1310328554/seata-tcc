@@ -9,21 +9,29 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Date;
 
 @SpringBootApplication// (scanBasePackages = "io.seata.samples", exclude = DataSourceAutoConfiguration.class)
 @ImportResource("classpath:spring/*.xml")
 @MapperScan(basePackages = "io.seata.samples.order")
+@RestController
 public class SpringbootMybatisOrderApplication  implements ApplicationRunner {
 
     public static void main(String[] args) {
         SpringApplication.run(SpringbootMybatisOrderApplication.class, args);
     }
 
+    @RequestMapping("/hi")
+    public String hi() {
+        return "hi~  " + new Date();
+    }
 
     /**
      * 扣钱账户 数据源

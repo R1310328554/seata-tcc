@@ -1,13 +1,13 @@
 server:
-  port: ${random.int[8010,8019]}
-#  port: 8088
+#  port: ${random.int[8010,8019]}
+  port: 8010
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/db_order?useSSL=false&serverTimezone=UTC
-    username: root
-    password: root
+    url: jdbc:mysql://${MYSQL_IP:127.0.0.1}:${MYSQL_PORT:3306}/db_order?useSSL=false&serverTimezone=UTC
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:root}
   jpa:
       show-sql: false
 

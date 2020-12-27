@@ -1,0 +1,49 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: sbm-account-service
+  labels:
+    app: sbm-account-service
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: sbm-account-service
+  template:
+    metadata:
+      labels:
+        app: sbm-account-service
+    spec:
+      containers:
+        - name: sbm-account-service
+          image: 10.100.254.144/bjc/sbm-account-service:latest
+          ports:
+            - containerPort: 8084
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8084
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          imagePullPolicy: IfNotPresent
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sbm-account-service
+  namespace: default
+  labels:
+    app: sbm-account-service
+spec:
+  ports:
+    - port: 8084
+      targetPort: 8084
+  selector:
+    app: sbm-account-service
+  type: NodePort  

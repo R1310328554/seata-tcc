@@ -11,21 +11,29 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Date;
 
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 @ImportResource("classpath:spring/*.xml")
 @MapperScan(basePackages = "io.seata.samples.account")
+@RestController
 public class SpringbootMybatisAccountApplication implements ApplicationRunner {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext run = SpringApplication.run(SpringbootMybatisAccountApplication.class, args);
     }
 
+    @RequestMapping("/hi")
+    public String hi() {
+        return "hi~  " + new Date();
+    }
 
     /**
      * 扣钱账户 数据源

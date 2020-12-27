@@ -18,7 +18,7 @@
     </modules>
 
     <properties>
-        <docker.image.prefix>bjc-</docker.image.prefix>
+        <docker.image.prefix>bjc</docker.image.prefix>
         <!-- docker harbor地址 -->
         <docker.repostory>10.100.254.144:80</docker.repostory>
 
@@ -355,7 +355,9 @@
                 <version>1.4.10</version>
                 <configuration>
                     <!-- Dockerfile目录指定 -->
-                    <dockerfile>Dockerfile</dockerfile>
+                    <dockerfile>Dockerfile</dockerfile>>
+                    <username>admin</username>
+                    <password>Harbor12345</password>
                     <repository>${docker.repostory}/${docker.image.prefix}/${project.artifactId}</repository>
                     <!-- 生成镜像标签 如不指定 默认为latest -->
                     <tag>${project.version}</tag>
