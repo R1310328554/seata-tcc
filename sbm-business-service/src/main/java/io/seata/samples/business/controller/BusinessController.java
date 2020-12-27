@@ -94,6 +94,7 @@ public class BusinessController {
      * @param transferAmount 转账金额
      */
     private boolean doTransfer(String from, String to, double transferAmount) {
+        long start = System.currentTimeMillis();
         //转账操作
         boolean ret = transferService.transfer(from, to, transferAmount);
         if(ret){
@@ -101,6 +102,7 @@ public class BusinessController {
         }else {
             log.info("从账户"+from+"向"+to+"转账 "+transferAmount+"元 失败.");
         }
+        log.error("耗时： " + (System.currentTimeMillis() - start));
         return ret;
     }
 
