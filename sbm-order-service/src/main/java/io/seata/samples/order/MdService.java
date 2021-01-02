@@ -1,8 +1,6 @@
 package io.seata.samples.order;
 
-
 import io.seata.rm.tcc.api.BusinessActionContext;
-import io.seata.samples.account.ResultHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
