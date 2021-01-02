@@ -1,13 +1,13 @@
 package io.seata.samples.order;
 
+import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +22,7 @@ import java.util.Date;
 @ImportResource("classpath:spring/*.xml")
 @MapperScan(basePackages = "io.seata.samples.order")
 @RestController
+@Slf4j
 public class SpringbootMybatisOrderApplication  implements ApplicationRunner {
 
     public static void main(String[] args) {
@@ -38,6 +39,15 @@ public class SpringbootMybatisOrderApplication  implements ApplicationRunner {
      */
     @Autowired
     private DataSource fromAccountDataSource;
+
+    @Bean
+    public ApplicationRunner runner(DataSource dataSource) {
+        return args -> {
+            log.info("dataSource: {}", dataSource);
+            Connection connection = dataSource.getConnection();
+            log.info("connection: {}", connection);
+        };
+    }
 
     /**
      * 初始化账户数据

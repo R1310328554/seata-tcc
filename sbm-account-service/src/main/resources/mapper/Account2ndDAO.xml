@@ -11,7 +11,7 @@
 	</select>
 
     <select id="getAccountForUpdate" resultType="io.seata.samples.common.Account">
-		select a.account_no accountNo, a.amount amount, a.freezed_amount freezedAmount from account a where a.account_no=#{value}
+		select a.account_no accountNo, a.amount amount, a.freezed_amount freezedAmount from account a where a.account_no=#{value} for update
 	</select>
 
     <insert id="addAccount" parameterType="io.seata.samples.common.Account">

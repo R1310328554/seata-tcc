@@ -8,6 +8,9 @@ spring:
     url: jdbc:mysql://${MYSQL_IP:127.0.0.1}:${MYSQL_PORT:3306}/db_account?useSSL=false&serverTimezone=UTC
     username: ${MYSQL_USERNAME:root}
     password: ${MYSQL_PASSWORD:root}
+    hikari:
+      maximum-pool-size: 200
+      minimum-idle: 5
   jpa:
     show-sql: false
   redis:
