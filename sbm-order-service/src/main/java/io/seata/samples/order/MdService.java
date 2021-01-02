@@ -31,6 +31,16 @@ public class MdService {
         stringStringValueOperations.set( xid + "-" + branchId,"", 10, TimeUnit.MINUTES);
 //        ResultHolder.removeResult(getClass(), businessActionContext.getXid());
     }
+    public boolean checkMd2(BusinessActionContext businessActionContext) throws SQLException {
+        String xid = businessActionContext.getXid();
+        long branchId = businessActionContext.getBranchId();
+        ValueOperations<String, String> stringStringValueOperations = stringRedisTemplate.opsForValue();
+        String s = stringStringValueOperations.getAndSet(xid + "-" + branchId, null);//  Value must not be null!
+        if (s == null) {
+            return true;
+        }
+        return false;
+    }
     public boolean checkMd(BusinessActionContext businessActionContext) throws SQLException {
         String xid = businessActionContext.getXid();
         long branchId = businessActionContext.getBranchId();

@@ -53,8 +53,8 @@ spec:
               - name: REDIS_PORT
                 value: "6379"
 
-              - name: HONORIFIC
-                value: "The Most Honorable"
+              - name: JAVA_TOOL_OPTIONS
+                value: "-Ddubbo.provider.threads=200"
 
 ---
 apiVersion: v1

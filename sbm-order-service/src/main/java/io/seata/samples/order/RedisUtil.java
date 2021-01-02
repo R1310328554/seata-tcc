@@ -15,7 +15,8 @@ public class RedisUtil {
     public static void main(String[] args) {
         // client
         RedisURI redisURI = new RedisURI();
-        redisURI.setHost("10.100.254.144");
+//        redisURI.setHost("10.100.254.144");
+        redisURI.setHost("127.0.0.1");
         redisURI.setPort(6379);
 //        redisURI.setPassword("hyman");
         RedisClient client = RedisClient.create(redisURI); // "redis://10.100.254.146:6379"
@@ -26,10 +27,31 @@ public class RedisUtil {
 
         // sync, 默认超时时间为 60s.
         RedisStringCommands<String, String> sync = connection.sync();
-        sync.set("host", "note.abeffect.com");
-        String value = sync.get("host");
+        String k = "host";
+        sync.set(k, "note.abeffect.com");
+        String value = sync.get(k);
         System.out.println(value);
         System.out.println("value = " + value);
+
+        String getset = sync.getset(k, null);
+        System.out.println("getset = " + getset);
+
+        getset = sync.getset(k, null);
+        System.out.println("getset = " + getset);
+
+        getset = sync.get(k + ":aaa" );
+        System.out.println("aaa = " + getset);
+
+//          getset = sync.getset(k, "1");
+//        System.out.println("getset = " + getset);
+//
+//          getset = sync.getset(k, "2");
+//        System.out.println("getset = " + getset);
+
+        sync.set(k, "vvv");
+
+        value = sync.get(k);
+        System.out.println(value);
 
         // close connection
         connection.close();

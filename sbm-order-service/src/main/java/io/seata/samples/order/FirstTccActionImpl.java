@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.util.StopWatch;
 
 /**
  * 扣钱参与者实现
@@ -45,6 +46,8 @@ public class FirstTccActionImpl implements FirstTccAction {
         //分布式事务ID
         final String xid = businessActionContext.getXid();
         final long branchId = businessActionContext.getBranchId();
+        StopWatch watch = new StopWatch();
+        watch.start();
 
         return fromDsTransactionTemplate.execute(new TransactionCallback<Boolean>(){
 
@@ -65,8 +68,15 @@ public class FirstTccActionImpl implements FirstTccAction {
                     fromAccountDAO.updateFreezedAmount(account);
 //                    mdDAO.insertMd(xid, branchId, 1);
 
+                    watch.stop();
+                    watch.start("t2");
                     mdService.beforeTx(businessActionContext);
+
                     log.info(String.format("prepareMinus account[%s] amount[%f], dtx transaction id: %s.", accountNo, amount, xid));
+
+                    watch.stop();
+                    String s = watch.prettyPrint();
+                    System.out.println(" try " +  s);
                     return true;
                 } catch (Throwable t) {
                     log.error(t.toString());
@@ -87,6 +97,10 @@ public class FirstTccActionImpl implements FirstTccAction {
         //分布式事务ID
         final String xid = businessActionContext.getXid();
         final long branchId = businessActionContext.getBranchId();
+
+        StopWatch watch = new StopWatch();
+        watch.start();
+
         //账户ID
         final String accountNo = String.valueOf(businessActionContext.getActionContext("accountNo"));
         //转出金额
@@ -110,8 +124,14 @@ public class FirstTccActionImpl implements FirstTccAction {
                     account.setFreezedAmount(account.getFreezedAmount()  - amount); // 为什么会出现负数？
                     fromAccountDAO.updateAmount(account);
 
+                    watch.stop();
+                    watch.start("t2");
                     mdService.completeTx(businessActionContext);
                     log.info(String.format("minus account[%s] amount[%f], dtx transaction id: %s.", accountNo, amount, xid));
+
+                    watch.stop();
+                    String s = watch.prettyPrint();
+                    System.out.println(" commit " +  s);
                     return true;
                 }catch (Throwable t){
                     log.error(t.toString());
