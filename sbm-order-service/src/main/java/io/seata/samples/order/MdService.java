@@ -50,7 +50,7 @@ public class MdService {
     }
 
     private void completeTx3(BusinessActionContext businessActionContext) throws SQLException {
-        io.seata.samples.account.ResultHolder.removeResult(getClass(), businessActionContext.getXid());
+        ResultHolder.removeResult(getClass(), businessActionContext.getXid());
     }
     private boolean checkMd3(BusinessActionContext businessActionContext) throws SQLException {
         if (ResultHolder.getResult(getClass(), businessActionContext.getXid()) == null) {
