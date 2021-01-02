@@ -33,19 +33,28 @@ spec:
           env:
             - name: ZK_IP
               value: "zk-cs"
-            - name: MYSQL_IP
-              value: "mysql-svc"
-            - name: MYSQL_PORT
-              value: "30306"
+            - name: ZK_PORT
+              value: 2181
+
             - name: SEATA_IP
               value: "seata-server"
             - name: SEATA_PORT
               value: "30091"
-            - name: HONORIFIC
-              value: "The Most Honorable"
-            - name: NAME
+
+            - name: MYSQL_IP
+              value: "mysql-svc"
+            - name: MYSQL_PORT
+              value: "30306"
+            - name: MYSQL_PASSWORD
               value: "123456789"
 
+            - name: REDIS_IP
+              value: "redis-svc"
+            - name: REDIS_PORT
+              value: 6379
+
+            - name: HONORIFIC
+              value: "The Most Honorable"
 
 ---
 apiVersion: v1

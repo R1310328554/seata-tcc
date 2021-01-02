@@ -2,13 +2,10 @@ package io.seata.samples.account;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.SpringApplicationRunListener;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
 
-@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
+@SpringBootApplication
 @ImportResource("classpath:spring/*.xml")
 @MapperScan(basePackages = "io.seata.samples.account")
 @RestController
