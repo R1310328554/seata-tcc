@@ -1,35 +1,35 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: sbm-account-service
+  name: sbm-order-service
   labels:
-    app: sbm-account-service
+    app: sbm-order-service
 spec:
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: sbm-account-service
+      app: sbm-order-service
   template:
     metadata:
       labels:
-        app: sbm-account-service
+        app: sbm-order-service
     spec:
       containers:
-        - name: sbm-account-service
-          image: 10.100.254.144/bjc/sbm-account-service:latest
+        - name: sbm-order-service
+          image: 10.100.254.144/bjc/sbm-order-service:latest
           ports:
-            - containerPort: 8020
+            - containerPort: 8010
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /hi
-              port: 8020
+              port: 8010
             initialDelaySeconds: 5
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 3
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
               - name: ZK_IP
                 value: "zk-cs"
@@ -39,24 +39,25 @@ spec:
                 value: "30306"
               - name: SEATA_IP
                 value: "seata-server"
-              - name: CCNAME
-                value: "Kubernetes"
-      tolerations:
-        - key: node-role.kubernetes.io/master
-          effect: NoSchedule
+              - name: SEATA_PORT
+                value: "30091"
+              - name: HONORIFIC
+                value: "The Most Honorable"
+              - name: MYSQL_PASSWORD
+                value: "123456789"
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: sbm-account-service
+  name: sbm-order-service
   namespace: default
   labels:
-    app: sbm-account-service
+    app: sbm-order-service
 spec:
   ports:
-    - port: 8020
-      targetPort: 8020
+    - port: 8010
+      targetPort: 8010
   selector:
-    app: sbm-account-service
+    app: sbm-order-service
   type: ClusterIP

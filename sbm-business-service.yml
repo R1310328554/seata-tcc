@@ -29,7 +29,7 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 3
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: ZK_IP
               value: "zk-cs"
@@ -44,11 +44,8 @@ spec:
             - name: HONORIFIC
               value: "The Most Honorable"
             - name: NAME
-              value: "Kubernetes"
+              value: "123456789"
 
-      tolerations:
-        - key: node-role.kubernetes.io/master
-          effect: NoSchedule
 
 ---
 apiVersion: v1

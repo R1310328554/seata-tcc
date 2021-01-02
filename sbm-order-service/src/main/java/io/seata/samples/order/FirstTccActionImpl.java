@@ -10,8 +10,6 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.Map;
-
 /**
  * 扣钱参与者实现
  *
@@ -26,7 +24,6 @@ public class FirstTccActionImpl implements FirstTccAction {
      */
     @Autowired
     private AccountDAO fromAccountDAO;
-
     /**
      * 扣钱数据源事务模板
      */
@@ -34,8 +31,7 @@ public class FirstTccActionImpl implements FirstTccAction {
     private TransactionTemplate fromDsTransactionTemplate;
 
     @Autowired
-    private MdDAO mdDAO;
-
+    private MdService mdService;
     /**
      * 一阶段准备，冻结 转账资金
      * @param businessActionContext
@@ -57,7 +53,6 @@ public class FirstTccActionImpl implements FirstTccAction {
                 try {
                     //校验账户余额
                     Account account = fromAccountDAO.getAccountForUpdate(accountNo);
-                    mdDAO.insertMd(xid, branchId, 1);
                     if(account == null){
                         throw new RuntimeException("账户不存在");
                     }
@@ -68,8 +63,10 @@ public class FirstTccActionImpl implements FirstTccAction {
                     double freezedAmount = account.getFreezedAmount() + amount;
                     account.setFreezedAmount(freezedAmount);
                     fromAccountDAO.updateFreezedAmount(account);
-                    log.info(String.format("prepareMinus account[%s] amount[%f], dtx transaction id: %s.", accountNo, amount, xid));
+//                    mdDAO.insertMd(xid, branchId, 1);
 
+                    mdService.beforeTx(businessActionContext);
+                    log.info(String.format("prepareMinus account[%s] amount[%f], dtx transaction id: %s.", accountNo, amount, xid));
                     return true;
                 } catch (Throwable t) {
                     log.error(t.toString());
@@ -99,16 +96,7 @@ public class FirstTccActionImpl implements FirstTccAction {
             @Override
             public Boolean doInTransaction(TransactionStatus status) {
                 try{
-                    Map map = mdDAO.selectMd(xid, branchId, 1);
-                    if (map == null) {
-                        log.error("全局事务记录 不存在!  xid: " + xid + ", branchId: " + branchId);
-                        return true;
-                    }
-                    Integer log_status = (Integer) map.get("log_status");
-                    if (log_status == 2) {
-                        return true;
-                    }
-                    int i = mdDAO.updateMd(xid, branchId, 2L);
+                    if (mdService.checkMd(businessActionContext)) return true;
 
                     Account account = fromAccountDAO.getAccountForUpdate(accountNo);
                     //扣除账户余额
@@ -121,6 +109,8 @@ public class FirstTccActionImpl implements FirstTccAction {
                     //释放账户 冻结金额
                     account.setFreezedAmount(account.getFreezedAmount()  - amount); // 为什么会出现负数？
                     fromAccountDAO.updateAmount(account);
+
+                    mdService.completeTx(businessActionContext);
                     log.info(String.format("minus account[%s] amount[%f], dtx transaction id: %s.", accountNo, amount, xid));
                     return true;
                 }catch (Throwable t){
@@ -151,16 +141,7 @@ public class FirstTccActionImpl implements FirstTccAction {
             @Override
             public Boolean doInTransaction(TransactionStatus status) {
                 try{
-                    Map map = mdDAO.selectMd(xid, branchId, 1);
-                    if (map == null) {
-                        log.error("全局事务记录 不存在!  xid: " + xid + ", branchId: " + branchId);
-                        return true;
-                    }
-                    Integer log_status = (Integer) map.get("log_status");
-                    if (log_status == 3) {
-                        return true;
-                    }
-                    int i = mdDAO.updateMd(xid, branchId, 3L);
+                    if (mdService.checkMd(businessActionContext)) return true;
 
                     Account account = fromAccountDAO.getAccountForUpdate(accountNo);
                     if(account == null){
@@ -170,8 +151,9 @@ public class FirstTccActionImpl implements FirstTccAction {
                     //释放冻结金额
                     account.setFreezedAmount(account.getFreezedAmount()  - amount);
                     fromAccountDAO.updateFreezedAmount(account);
-                    log.error(String.format("Undo prepareMinus account[%s] amount[%f], dtx transaction id: %s.", accountNo, amount, xid));
 
+                    mdService.completeTx(businessActionContext);
+                    log.error(String.format("Undo prepareMinus account[%s] amount[%f], dtx transaction id: %s.", accountNo, amount, xid));
                     return true;
                 }catch (Throwable t){
                     log.error(t.toString());
