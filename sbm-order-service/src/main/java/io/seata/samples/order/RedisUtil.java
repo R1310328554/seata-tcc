@@ -2,6 +2,7 @@ package io.seata.samples.order;
 
 
 import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisStringCommands;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,12 @@ import org.springframework.stereotype.Service;
 public class RedisUtil {
     public static void main(String[] args) {
         // client
-        RedisClient client = RedisClient.create("redis://localhost:63791");
+        RedisURI redisURI = new RedisURI();
+        redisURI.setHost("10.100.254.144");
+        redisURI.setPort(6379);
+//        redisURI.setPassword("hyman");
+        RedisClient client = RedisClient.create(redisURI); // "redis://10.100.254.146:6379"
+//        client.set
 
         // connection, 线程安全的长连接，连接丢失时会自动重连，直到调用 close 关闭连接。
         StatefulRedisConnection<String, String> connection = client.connect();
