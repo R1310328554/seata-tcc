@@ -15,12 +15,12 @@ public interface FirstTccAction {
      * 一阶段方法
      * 
      * @param businessActionContext
-     * @param accountNo
      * @param amount
      */
     @TwoPhaseBusinessAction(name = "firstTccAction", commitMethod = "commit", rollbackMethod = "rollback")
     public boolean prepareMinus(BusinessActionContext businessActionContext,
-                                @BusinessActionContextParameter(paramName = "accountNo") String accountNo,
+                                @BusinessActionContextParameter(paramName = "accountNo") String fromAccountNo,
+                                @BusinessActionContextParameter(paramName = "toAccountNo") String toAccountNo,
                                 @BusinessActionContextParameter(paramName = "amount") double amount);
 
     /**

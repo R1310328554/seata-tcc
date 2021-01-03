@@ -35,10 +35,12 @@ public class SecondTccActionImpl implements SecondTccAction {
      * @return
      */
     @Override
-    public boolean prepareAdd(final BusinessActionContext businessActionContext, final String accountNo, final double amount) {
+    public boolean prepareAdd(final BusinessActionContext businessActionContext, final String fromAccountNo, final String accountNo, final double amount) {
         //分布式事务ID
         final String xid = businessActionContext.getXid();
         try {
+            if (mdService.beforeTx(businessActionContext)) return true;
+
             Account account = new Account();
             account.setAccountNo(accountNo);
             account.setAmount(amount);
@@ -46,7 +48,6 @@ public class SecondTccActionImpl implements SecondTccAction {
             if (i <= 0) {
                 return false;
             }
-            mdService.beforeTx(businessActionContext);
             log.info(String.format("prepareAdd account[%s] amount[%f], dtx transaction id: %s.", accountNo, amount, xid));
             return true;
         } catch (Throwable t) {

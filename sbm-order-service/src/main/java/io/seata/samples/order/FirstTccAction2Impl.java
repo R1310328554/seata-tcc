@@ -35,7 +35,7 @@ public class FirstTccAction2Impl implements FirstTccAction {
      * @return
      */
     @Override
-    public boolean prepareMinus(BusinessActionContext businessActionContext, final String accountNo, final double amount) {
+    public boolean prepareMinus(BusinessActionContext businessActionContext,  final String accountNo, final String toAccountNo, final double amount) {
         //分布式事务ID
         final String xid = businessActionContext.getXid();
         StopWatch watch = new StopWatch();

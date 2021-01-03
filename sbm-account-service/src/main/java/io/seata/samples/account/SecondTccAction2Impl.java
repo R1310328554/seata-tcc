@@ -39,7 +39,7 @@ public class SecondTccAction2Impl implements SecondTccAction {
      * @return
      */
     @Override
-    public boolean prepareAdd(final BusinessActionContext businessActionContext, final String accountNo, final double amount) {
+    public boolean prepareAdd(final BusinessActionContext businessActionContext,  final String fromAccountNo, final String accountNo, final double amount) {
         //分布式事务ID
         final String xid = businessActionContext.getXid();
         final long branchId = businessActionContext.getBranchId();

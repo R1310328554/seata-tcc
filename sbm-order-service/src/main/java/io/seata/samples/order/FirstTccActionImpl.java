@@ -34,10 +34,12 @@ public class FirstTccActionImpl implements FirstTccAction {
      * @return
      */
     @Override
-    public boolean prepareMinus(BusinessActionContext businessActionContext, final String accountNo, final double amount) {
+    public boolean prepareMinus(BusinessActionContext businessActionContext,  final String accountNo, final String toAccountNo, final double amount) {
         //分布式事务ID
         final String xid = businessActionContext.getXid();
         try {
+            if (mdService.beforeTx(businessActionContext)) return true;
+
             Account account = new Account();
             account.setAccountNo(accountNo);
             account.setAmount(amount);
@@ -46,7 +48,6 @@ public class FirstTccActionImpl implements FirstTccAction {
 //                throw new RuntimeException("余额不足");
                 return false;
             }
-            mdService.beforeTx(businessActionContext);
             log.info(String.format("prepareMinus account[%s] amount[%f], dtx transaction id: %s.", accountNo, amount, xid));
             return true;
         }catch (Throwable t){

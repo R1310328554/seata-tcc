@@ -15,12 +15,12 @@ public interface SecondTccAction {
      * 一阶段方法
      * 
      * @param businessActionContext
-     * @param accountNo
      * @param amount
      */
     @TwoPhaseBusinessAction(name = "secondTccAction", commitMethod = "commit", rollbackMethod = "rollback")
     public boolean prepareAdd(BusinessActionContext businessActionContext,
-                              @BusinessActionContextParameter(paramName = "accountNo") String accountNo,
+                              @BusinessActionContextParameter(paramName = "fromAccountNo") String fromAccountNo,
+                              @BusinessActionContextParameter(paramName = "accountNo") String toAccountNo,
                               @BusinessActionContextParameter(paramName = "amount") double amount);
 
     /**
