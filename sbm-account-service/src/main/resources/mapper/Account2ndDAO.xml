@@ -30,4 +30,18 @@
 		delete from account
 	</delete>
 
+
+
+	<update id="minusFreezedAmount" parameterType="io.seata.samples.common.Account">
+		update account set freezed_amount= freezed_amount - #{amount} where account_no=#{accountNo} and  amount > #{amount}
+	</update>
+
+	<update id="addFreezedAmount" parameterType="io.seata.samples.common.Account">
+		update account set freezed_amount= freezed_amount + #{amount} where account_no=#{accountNo}
+	</update>
+
+	<update id="updateAmountForAdd" parameterType="io.seata.samples.common.Account">
+		update account set amount= amount + #{amount}, freezed_amount=freezed_amount - #{amount} where account_no=#{accountNo}
+	</update>
+
 </mapper>
