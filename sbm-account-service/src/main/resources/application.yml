@@ -127,7 +127,7 @@ seata:
       password: ""
 logging:
   level:
-    root: error
+    root: info
 
 dubbo:
   provider:

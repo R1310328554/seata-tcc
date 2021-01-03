@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StopWatch;
 
 /**
  * 扣钱参与者实现
@@ -38,8 +37,6 @@ public class FirstTccActionImpl implements FirstTccAction {
     public boolean prepareMinus(BusinessActionContext businessActionContext, final String accountNo, final double amount) {
         //分布式事务ID
         final String xid = businessActionContext.getXid();
-        StopWatch watch = new StopWatch();
-        watch.start();
         try {
             Account account = new Account();
             account.setAccountNo(accountNo);
@@ -49,13 +46,8 @@ public class FirstTccActionImpl implements FirstTccAction {
 //                throw new RuntimeException("余额不足");
                 return false;
             }
-            watch.stop();
-            watch.start("t2");
             mdService.beforeTx(businessActionContext);
             log.info(String.format("prepareMinus account[%s] amount[%f], dtx transaction id: %s.", accountNo, amount, xid));
-            watch.stop();
-            String s = watch.prettyPrint();
-            System.out.println(" try " + s);
             return true;
         }catch (Throwable t){
             log.error(t.toString());
@@ -73,9 +65,6 @@ public class FirstTccActionImpl implements FirstTccAction {
     public boolean commit(BusinessActionContext businessActionContext) {
         //分布式事务ID
         final String xid = businessActionContext.getXid();
-
-        StopWatch watch = new StopWatch();
-        watch.start();
         //账户ID
         final String accountNo = String.valueOf(businessActionContext.getActionContext("accountNo"));
         //转出金额
@@ -90,13 +79,8 @@ public class FirstTccActionImpl implements FirstTccAction {
 //                throw new RuntimeException("余额不足");
                 return false;
             }
-            watch.stop();
-            watch.start("t2");
             mdService.completeTx(businessActionContext);
             log.info(String.format("minus account[%s] amount[%f], dtx transaction id: %s.", accountNo, amount, xid));
-            watch.stop();
-            String s = watch.prettyPrint();
-            System.out.println(" commit " +  s);
             return true;
         }catch (Throwable t){
             log.error(t.toString());

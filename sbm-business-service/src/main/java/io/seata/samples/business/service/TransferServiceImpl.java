@@ -43,23 +43,13 @@ public class TransferServiceImpl implements TransferService, BeanNameAware {
             //扣钱参与者，一阶段失败; 回滚本地事务和分布式事务
             throw new RuntimeException("账号:["+from+"] 预扣款失败");
         }
-        watch.stop();
-        watch.start("t2");
         //加钱参与者，一阶段执行
         ret = secondTccAction.prepareAdd(null, to, amount);
         if(!ret){
             throw new RuntimeException("账号:["+to+"] 预收款失败");
         }
         watch.stop();
-//        watch.start("task3");
-//        try {
-//            Thread.sleep(200);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        watch.stop();
-        String s = watch.prettyPrint();
-        System.out.println(s);
+        log.info(watch.shortSummary());
         log.info(String.format("transfer amount[%s] from [%s] to [%s] finish.", String.valueOf(amount), from, to));
         return true;
     }
