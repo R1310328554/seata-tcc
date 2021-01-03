@@ -1,5 +1,6 @@
 package io.seata.samples.account;
 
+import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -21,9 +22,16 @@ import java.util.Date;
 @ImportResource("classpath:spring/*.xml")
 @MapperScan(basePackages = "io.seata.samples.account")
 @RestController
+@Slf4j
 public class SpringbootMybatisAccountApplication implements ApplicationRunner {
 
     public static void main(String[] args) {
+
+        log.info("11111");
+        log.error("22222222");
+        log.debug("33333333333");
+        log.warn("44444444");
+
         ConfigurableApplicationContext run = SpringApplication.run(SpringbootMybatisAccountApplication.class, args);
     }
 
@@ -68,6 +76,10 @@ public class SpringbootMybatisAccountApplication implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         //初始化表数据
         double initAmount = 1_000_000_000;
+        log.info("aaa");
+        log.error("errr");
+        log.debug("ddddd");
+        log.warn("wwwwwww");
         try {
 //            prepareData(toAccountDataSource, "C", initAmount);
         } catch (Exception e) {
