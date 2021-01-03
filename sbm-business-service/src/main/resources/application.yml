@@ -111,7 +111,7 @@ seata:
       password: ""
 logging:
   level:
-    root: info
+    root: warn
 spring:
   jpa:
     show-sql: false
